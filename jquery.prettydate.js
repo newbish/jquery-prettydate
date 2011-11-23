@@ -40,11 +40,26 @@ $.prettyDate = {
 	now: function() {
 		return new Date();
 	},
+
+        fromUTC: function (utcDate, isUTC) {
+	        if (isUTC === "undefined" || !isUTC)
+			return utcDate;
+		else {
+			var date = new Date();
+			date.setUTCDate(utcDate.getDate());
+			date.setUTCHours(utcDate.getHours());
+			date.setUTCMonth(utcDate.getMonth());
+			date.setUTCMinutes(utcDate.getMinutes());
+			date.setUTCSeconds(utcDate.getSeconds());
+			date.setUTCMilliseconds(utcDate.getMilliseconds());
+			return date;
+		}
+	},
 	
 	// Takes an ISO time and returns a string representing how
 	// long ago the date represents.
-	format: function(time) {
-		var date = new Date((time || "").replace(/-/g,"/").replace(/[TZ]/g," ")),
+	format: function(time, isUTC) {
+		var date = $.prettyDate.fromUTC(new Date((time || "").replace(/-/g,"/").replace(/[TZ]/g," ")), isUTC),
 			diff = ($.prettyDate.now().getTime() - date.getTime()) / 1000,
 			day_diff = Math.floor(diff / 86400);
 			
@@ -79,14 +94,16 @@ $.prettyDate.messages = {
 $.fn.prettyDate = function(options) {
 	options = $.extend({
 		value: function() {
-			return $(this).attr("title");
+			return $(this).attr(options.attribute);
 		},
-		interval: 10000
+		interval: 10000,
+		attribute: "title",
+		isUTC: false
 	}, options);
 	var elements = this;
 	function format() {
 		elements.each(function() {
-			var date = $.prettyDate.format(options.value.apply(this));
+			var date = $.prettyDate.format(options.value.apply(this), options.isUTC);
 			if ( date && $(this).text() != date )
 				$(this).text( date );
 		});
