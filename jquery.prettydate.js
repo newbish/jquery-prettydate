@@ -49,6 +49,7 @@ $.prettyDate = {
 			date.setUTCDate(utcDate.getDate());
 			date.setUTCHours(utcDate.getHours());
 			date.setUTCMonth(utcDate.getMonth());
+			date.setUTCFullYear(utcDate.getFullYear())
 			date.setUTCMinutes(utcDate.getMinutes());
 			date.setUTCSeconds(utcDate.getSeconds());
 			date.setUTCMilliseconds(utcDate.getMilliseconds());
